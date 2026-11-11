@@ -150,23 +150,7 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 }
 
 
-/* Plain assistant output: remove the response-card surface without changing layout. */
-.ao-pane{
-  border:0!important;
-  background:transparent!important;
-  border-radius:0!important;
-  padding:0!important;
-  box-shadow:none!important;
-}
-.ao-composer:focus-within{
-  border-color:hsl(var(--border-faint))!important;
-  box-shadow:0 1px 2px hsl(var(--text-primary)/.05)!important;
-}
-.ao-composer textarea:focus,
-.ao-composer textarea:focus-visible{
-  outline:0!important;
-  box-shadow:none!important;
-}
+.ao-pane:not(.ao-pane-card){border:0!important;background:transparent!important;border-radius:0!important;padding:0!important;box-shadow:none!important}
 /* True streamed output, thinking dots and Markdown */
 .ao-pb.ao-thinking{min-height:28px;display:flex;align-items:center;gap:5px}
 .ao-pb.ao-thinking:before,.ao-pb.ao-thinking:after{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.4;animation:pixThink 1s infinite ease-in-out}
@@ -207,3 +191,16 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 
 /* Keep exactly one thinking animation: the morphing shape beside its label. */
 .ao-pb.ao-thinking::before,.ao-pb.ao-thinking::after{display:none!important;content:none!important}
+
+/* Restore comparison cards; direct mode remains a plain single response. */
+.ao-panes{grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));align-items:stretch}
+.ao-pane-card{border:1px solid hsl(var(--border-faint))!important;background:hsl(var(--surface-secondary))!important;border-radius:var(--ao-radius)!important;padding:14px!important;box-shadow:0 1px 2px hsl(var(--text-primary)/.035)!important;min-width:0;overflow:hidden}
+.ao-provider{display:flex;align-items:center;gap:8px;min-width:0}
+.ao-provider-logo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:22px;height:22px}
+.ao-provider-logo svg{width:100%;height:100%}
+.ao-pane-card .ao-pn{font-size:14px;font-weight:650}
+.ao-pane-card .ao-ph{min-width:0;gap:6px}
+.ao-pane-card .ao-pm{font-variant-numeric:tabular-nums}
+.ao-pane-card .ao-pb{min-width:0;overflow-wrap:anywhere}
+@media(max-width:767px){.ao-panes{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.ao-pane-card{padding:10px!important;border-radius:12px!important}.ao-provider{gap:6px}.ao-provider-logo{width:19px;height:19px}.ao-pane-card .ao-pn{font-size:12px}.ao-pane-card .ao-pm{font-size:10px}.ao-pane-card .ao-pb{font-size:13px;line-height:1.65}}
+@media(max-width:360px){.ao-pane-card{padding:8px!important}.ao-provider-logo{width:17px;height:17px}.ao-pane-card .ao-pn{font-size:11px}.ao-pane-card .ao-pb{font-size:12px}}
