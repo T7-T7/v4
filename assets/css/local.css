@@ -323,3 +323,15 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 }
 .ao-composer:focus-within{border-color:hsl(var(--border-faint))!important}
 .ao-sel:focus,.ao-sel:focus-visible{border-color:hsl(var(--border-medium))!important}
+
+
+/* Direct mode: render the answer as a full-width conversation, not as a comparison card. */
+.ao-conv:has(.ao-round-direct){max-width:none;width:100%}
+.ao-round-direct{width:100%;max-width:none;min-width:0}
+.ao-round-direct .ao-panes{display:block!important;width:100%;max-width:none;min-width:0}
+.ao-round-direct .ao-pane:not(.ao-pane-card){display:block;width:100%;max-width:none;min-width:0;padding:0!important}
+.ao-round-direct .ao-pb{display:block;width:100%;max-width:none;min-width:0;overflow-wrap:anywhere;white-space:normal}
+@media(max-width:767px){
+ .ao-conv:has(.ao-round-direct){padding-inline:14px}
+ .ao-round-direct .ao-pb{font-size:16px;line-height:1.8}
+}
