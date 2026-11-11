@@ -150,6 +150,9 @@ function parseMethod2(raw) {
 }
 
 async function geminiMethod1(message, options = {}) {
+  if (options.instruction && options.instruction.trim()) {
+    message = options.instruction.trim() + "\n\n" + message;
+  }
   const session = await bootstrap();
   const resume = options.sessionId ? unpack(options.sessionId) : null;
   const resumeArray = resume?.resume || ['', '', '', null, null, null, null, null, null, ''];
@@ -445,9 +448,8 @@ const gemini = {
     const hasInstruction = Boolean(params.instruction && params.instruction.trim());
 
     let ordered;
-    if (isMethod1Session) ordered = [SOURCES[0], SOURCES[1], SOURCES[2]];
-    else if (isMethod2Session || hasInstruction) ordered = [SOURCES[1], SOURCES[0], SOURCES[2]];
-    else ordered = SOURCES;
+    if (isMethod2Session) ordered = [SOURCES[1], SOURCES[0], SOURCES[2]];
+    else ordered = [SOURCES[0], SOURCES[1], SOURCES[2]];
 
     for (const source of ordered) {
       try {
