@@ -106,7 +106,7 @@
           var quoted=[];
           while(i<lines.length&&/^\s*>/.test(lines[i]))quoted.push(lines[i++].replace(/^\s*>\s?/,''));
           var q=el('blockquote','md-quote');var holder=el('div');var old=target;target=holder;
-          var saved=lines;lines=quoted;i=0;parseBlocks(false);lines=saved;
+          var saved=lines,resume=i;lines=quoted;i=0;parseBlocks(false);lines=saved;i=resume;
           while(holder.firstChild)q.appendChild(holder.firstChild);target=old;target.appendChild(q);continue;
         }
         var fence=s.match(/^(`{3,}|~{3,})(.*)$/);
