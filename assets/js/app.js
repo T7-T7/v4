@@ -277,6 +277,7 @@
         renderMarkdown(view.bodies[index],answer.text);view.bodies[index].classList.remove('live','ao-thinking','ao-streaming');
         view.metas[index].m.textContent=(answer.ms/1000).toFixed(1)+'s';view.metas[index].s.classList.remove('ao-hidden');
       } catch (error) {
+        if (typeof revealTimer !== 'undefined' && revealTimer) clearInterval(revealTimer);
         if (requestId !== state.requestId) return;
         if (error && error.name === 'AbortError') return;
         answer.text = (state.lang === 'ar' ? 'تعذر الحصول على رد من Gemini. حاول مرة أخرى بعد قليل.' : 'Gemini could not complete this request. Please try again.');
