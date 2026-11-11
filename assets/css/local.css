@@ -204,3 +204,63 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 .ao-pane-card .ao-pb{min-width:0;overflow-wrap:anywhere}
 @media(max-width:767px){.ao-panes{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.ao-pane-card{padding:10px!important;border-radius:12px!important}.ao-provider{gap:6px}.ao-provider-logo{width:19px;height:19px}.ao-pane-card .ao-pn{font-size:12px}.ao-pane-card .ao-pm{font-size:10px}.ao-pane-card .ao-pb{font-size:13px;line-height:1.65}}
 @media(max-width:360px){.ao-pane-card{padding:8px!important}.ao-provider-logo{width:17px;height:17px}.ao-pane-card .ao-pn{font-size:11px}.ao-pane-card .ao-pb{font-size:12px}}
+
+
+/* Comparison cards: fixed-size horizontal carousel with independent scrolling bodies. */
+.ao-panes-compare{
+  display:flex!important;align-items:flex-start!important;gap:14px!important;
+  width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;
+  padding:2px 2px 12px;scroll-snap-type:x mandatory;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+}
+.ao-panes-compare .ao-pane-card{
+  flex:0 0 clamp(310px,46vw,470px);width:clamp(310px,46vw,470px);
+  height:470px;min-height:470px;max-height:470px;
+  display:flex;flex-direction:column;align-self:flex-start;
+  scroll-snap-align:start;overflow:hidden!important;
+}
+.ao-panes-compare .ao-pane-card .ao-ph{flex:0 0 auto}
+.ao-panes-compare .ao-pane-card .ao-pb{
+  flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto;
+  overscroll-behavior:contain;padding-inline-end:5px;
+  scrollbar-width:thin;
+}
+.ao-panes-compare .ao-pane-card .ao-src{flex:0 0 auto;max-height:54px;overflow:auto}
+@media(max-width:767px){
+  .ao-panes-compare{gap:10px!important}
+  .ao-panes-compare .ao-pane-card{
+    flex-basis:84vw;width:84vw;height:430px;min-height:430px;max-height:430px;
+    padding:13px!important
+  }
+}
+@media(max-width:360px){
+  .ao-panes-compare .ao-pane-card{flex-basis:88vw;width:88vw;height:410px;min-height:410px;max-height:410px}
+}
+/* Focus must never recolor borders, outlines, shadows or rings. */
+.ao-composer,.ao-composer:focus-within{
+  border-color: hsl(var(--border-faint))!important;
+  box-shadow:none!important;outline:none!important;
+}
+.ao-composer textarea,.ao-composer textarea:focus,
+.ao-sel,.ao-sel:focus,.ao-send,.ao-send:focus,
+.ao-seg button,.ao-seg button:focus,
+.ao-iconbtn,.ao-iconbtn:focus,.ao-navbtn,.ao-navbtn:focus,
+.ao-chip,.ao-chip:focus,.ao-pill,.ao-pill:focus,
+.ao-vbtn,.ao-vbtn:focus{
+  outline:none!important;box-shadow:none!important;
+}
+.ao-sel:focus,.ao-send:focus,.ao-seg button:focus,
+.ao-iconbtn:focus,.ao-navbtn:focus,.ao-chip:focus,
+.ao-pill:focus,.ao-vbtn:focus{border-color:inherit!important}
+.ao-thinking-indicator{gap:9px}
+.ao-thinking-shape{
+  width:13px;height:13px;border:2px solid currentColor;border-radius:50%;
+  animation:pixShapeMorph 1.65s cubic-bezier(.6,0,.4,1) infinite;
+}
+.ao-thinking-text{animation:none!important;opacity:.8}
+@keyframes pixShapeMorph{
+  0%,100%{border-radius:50%;transform:rotate(0deg) scale(.94)}
+  50%{border-radius:4px;transform:rotate(180deg) scale(1.06)}
+}
+@media(prefers-reduced-motion:reduce){.ao-thinking-shape{animation:none!important}}
