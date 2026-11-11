@@ -180,3 +180,11 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 .ao-pb .md-inline-code{font-family:ui-monospace,monospace;font-size:.9em;padding:2px 5px;border-radius:5px;background:rgba(127,127,127,.14)}
 .ao-pb .md-code{overflow:auto;padding:12px;border-radius:8px;background:rgba(127,127,127,.12);direction:ltr;text-align:left}.ao-pb .md-code code{font-family:ui-monospace,monospace;white-space:pre}
 @media(prefers-reduced-motion:reduce){.ao-pb.ao-thinking:before,.ao-pb.ao-thinking:after{animation:none}}
+
+/* Pix thinking: a single morphing shape with a quiet animated label */
+.ao-thinking-indicator{display:inline-flex;align-items:center;gap:11px;min-height:30px;color:hsl(var(--text-muted));font-size:14px;letter-spacing:.01em}
+.ao-thinking-shape{display:block;width:13px;height:13px;border:2px solid currentColor;border-radius:50%;animation:pixShapeMorph 1.35s cubic-bezier(.65,0,.35,1) infinite;transform-origin:center}
+.ao-thinking-text{animation:pixThinkingText 1.7s ease-in-out infinite}
+@keyframes pixShapeMorph{0%,100%{border-radius:50%;transform:rotate(0) scale(.92)}50%{border-radius:4px;transform:rotate(180deg) scale(1.08)}}
+@keyframes pixThinkingText{0%,100%{opacity:.48;transform:translateX(0)}50%{opacity:1;transform:translateX(2px)}}
+@media(prefers-reduced-motion:reduce){.ao-thinking-shape,.ao-thinking-text{animation:none}}
