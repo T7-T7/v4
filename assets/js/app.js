@@ -176,13 +176,13 @@
     var wrap = el('section', 'ao-round');
     wrap.style.cssText = 'display:flex;flex-direction:column;gap:14px';
     var q = el('div', 'ao-q', r.prompt); q.setAttribute('dir', 'auto'); wrap.appendChild(q);
-    var panes = el('div', 'ao-panes'); panes.style.setProperty('--cols', r.mode === 'direct' ? 1 : 2);
+    var panes = el('div', 'ao-panes' + (r.mode === 'direct' ? '' : ' ao-panes-compare')); panes.style.setProperty('--cols', r.mode === 'direct' ? 1 : 2);
     var names = paneNames(r); var bodies = []; var metas = [];
     r.answers.forEach(function (a, i) {
       var p = el('article', 'ao-pane' + (r.mode === 'direct' ? '' : ' ao-pane-card'));
       var h = el('div', 'ao-ph'); var brand=el('div','ao-provider'); var logo=el('span','ao-provider-logo'); logo.innerHTML=ICON.gemini; var n = el('div', 'ao-pn', names[i]); n.dataset.i = i; brand.appendChild(logo); brand.appendChild(n); var m = el('div', 'ao-pm', live ? tr('searching') : (a.ms ? (a.ms / 1000).toFixed(1) + 's' : ''));
       h.appendChild(brand); h.appendChild(m); p.appendChild(h);
-      var b = el('div', 'ao-pb' + (live ? ' live ao-thinking' : '')); if (live) { var indicator=el('span','ao-thinking-indicator'); indicator.appendChild(el('span','ao-thinking-shape')); indicator.appendChild(el('span','ao-thinking-text',state.lang==='ar'?'يفكر':'Thinking')); b.appendChild(indicator); } else renderMarkdown(b, a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
+      var b = el('div', 'ao-pb' + (live ? ' live ao-thinking' : '')); if (live) { var indicator=el('span','ao-thinking-indicator'); indicator.appendChild(el('span','ao-thinking-shape')); indicator.appendChild(el('span','ao-thinking-text','Thinking')); b.appendChild(indicator); } else renderMarkdown(b, a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
       var s = el('div', 'ao-src ao-hidden'); a.sources.forEach(function (x) { s.appendChild(el('span', null, x)); }); p.appendChild(s);
       if (!live) s.classList.remove('ao-hidden');
       panes.appendChild(p); bodies.push(b); metas.push({ m: m, s: s, n: n });
