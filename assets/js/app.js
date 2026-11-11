@@ -168,7 +168,7 @@
       var p = el('article', 'ao-pane');
       var h = el('div', 'ao-ph'); var n = el('div', 'ao-pn', names[i]); n.dataset.i = i; var m = el('div', 'ao-pm', live ? tr('searching') : (a.ms ? (a.ms / 1000).toFixed(1) + 's' : ''));
       h.appendChild(n); h.appendChild(m); p.appendChild(h);
-      var b = el('div', 'ao-pb' + (live ? ' live ao-thinking' : '')); if (!live) renderMarkdown(b, a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
+      var b = el('div', 'ao-pb' + (live ? ' live ao-thinking' : '')); if (live) { var indicator=el('span','ao-thinking-indicator'); indicator.appendChild(el('span','ao-thinking-shape')); indicator.appendChild(el('span','ao-thinking-text',state.lang==='ar'?'يفكر':'Thinking')); b.appendChild(indicator); } else renderMarkdown(b, a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
       var s = el('div', 'ao-src ao-hidden'); a.sources.forEach(function (x) { s.appendChild(el('span', null, x)); }); p.appendChild(s);
       if (!live) s.classList.remove('ao-hidden');
       panes.appendChild(p); bodies.push(b); metas.push({ m: m, s: s, n: n });
@@ -255,13 +255,23 @@
         if(!response.ok){var errorData=await response.json().catch(function(){return {};});throw new Error(apiError(errorData,response.status));}
         if(!response.body||!response.body.getReader)throw new Error('Streaming is not supported by this browser.');
         var reader=response.body.getReader(),decoder=new TextDecoder(),pending='',doneEvent=null;answer.text='';
+        var shownLength=0,streamFinished=false,revealTimer=null;
+        function revealTick(){
+          if(requestId!==state.requestId){clearInterval(revealTimer);return;}
+          if(shownLength<answer.text.length){var remaining=answer.text.length-shownLength;shownLength+=Math.min(remaining,Math.max(1,Math.ceil(remaining/18)));view.bodies[index].classList.remove('ao-thinking');renderMarkdown(view.bodies[index],answer.text.slice(0,shownLength));view.bodies[index].classList.add('ao-streaming');scrollDown();}
+          else if(streamFinished){clearInterval(revealTimer);revealTimer=null;}
+        }
+        revealTimer=setInterval(revealTick,24);
         while(true){var part=await reader.read();if(part.done)break;pending+=decoder.decode(part.value,{stream:true});var chunks=pending.split('\n\n');pending=chunks.pop()||'';
           chunks.forEach(function(chunk){var raw=chunk.split('\n').filter(function(x){return x.indexOf('data:')===0;}).map(function(x){return x.slice(5).trim();}).join('\n');if(!raw)return;var event=JSON.parse(raw);
-            if(event.type==='chunk'){answer.text+=event.text||'';if(requestId===state.requestId){view.bodies[index].classList.remove('ao-thinking');renderMarkdown(view.bodies[index],answer.text);view.bodies[index].classList.add('ao-streaming');scrollDown();}}
+            if(event.type==='chunk'){answer.text+=event.text||'';}
             else if(event.type==='done')doneEvent=event;else if(event.type==='error')throw new Error(event.error||'Streaming failed');
           });
         }
         if(!answer.text.trim()&&doneEvent&&doneEvent.response)answer.text=doneEvent.response;
+        streamFinished=true;
+        while(shownLength<answer.text.length){await new Promise(function(resolve){setTimeout(resolve,24);});revealTick();}
+        if(revealTimer){clearInterval(revealTimer);revealTimer=null;}
         if(!answer.text.trim())throw new Error('Gemini returned an empty response.');
         answer.text=answer.text.trim();answer.ms=Date.now()-start;if(doneEvent&&doneEvent.sessionId)chat.sessions[model]=doneEvent.sessionId;
         renderMarkdown(view.bodies[index],answer.text);view.bodies[index].classList.remove('live','ao-thinking','ao-streaming');
@@ -269,7 +279,7 @@
       } catch (error) {
         if (requestId !== state.requestId) return;
         if (error && error.name === 'AbortError') return;
-        answer.text = (state.lang === 'ar' ? 'تعذر الحصول على رد من Gemini: ' : 'Gemini request failed: ') + String(error && error.message || error);
+        answer.text = (state.lang === 'ar' ? 'تعذر الحصول على رد من Gemini. حاول مرة أخرى بعد قليل.' : 'Gemini could not complete this request. Please try again.');
         answer.ms = Date.now() - start;
         renderMarkdown(view.bodies[index], answer.text);
         view.bodies[index].classList.remove('live','ao-thinking','ao-streaming');
