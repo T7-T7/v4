@@ -192,206 +192,64 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 /* Keep exactly one thinking animation: the morphing shape beside its label. */
 .ao-pb.ao-thinking::before,.ao-pb.ao-thinking::after{display:none!important;content:none!important}
 
-/* Restore comparison cards; direct mode remains a plain single response. */
-.ao-panes{grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));align-items:stretch}
-.ao-pane-card{border:1px solid hsl(var(--border-faint))!important;background:hsl(var(--surface-secondary))!important;border-radius:var(--ao-radius)!important;padding:14px!important;box-shadow:0 1px 2px hsl(var(--text-primary)/.035)!important;min-width:0;overflow:hidden}
-.ao-provider{display:flex;align-items:center;gap:8px;min-width:0}
-.ao-provider-logo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:22px;height:22px}
-.ao-provider-logo svg{width:100%;height:100%}
-.ao-pane-card .ao-pn{font-size:14px;font-weight:650}
-.ao-pane-card .ao-ph{min-width:0;gap:6px}
-.ao-pane-card .ao-pm{font-variant-numeric:tabular-nums}
-.ao-pane-card .ao-pb{min-width:0;overflow-wrap:anywhere}
-@media(max-width:767px){.ao-panes{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.ao-pane-card{padding:10px!important;border-radius:12px!important}.ao-provider{gap:6px}.ao-provider-logo{width:19px;height:19px}.ao-pane-card .ao-pn{font-size:12px}.ao-pane-card .ao-pm{font-size:10px}.ao-pane-card .ao-pb{font-size:13px;line-height:1.65}}
-@media(max-width:360px){.ao-pane-card{padding:8px!important}.ao-provider-logo{width:17px;height:17px}.ao-pane-card .ao-pn{font-size:11px}.ao-pane-card .ao-pb{font-size:12px}}
 
-
-/* Comparison cards: fixed-size horizontal carousel with independent scrolling bodies. */
+/* Pix comparison: compact swipe cards; direct answers stay full width. */
 .ao-panes-compare{
-  display:flex!important;align-items:flex-start!important;gap:14px!important;
-  width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;
-  padding:2px 2px 12px;scroll-snap-type:x mandatory;
-  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
+ display:flex!important;gap:10px!important;align-items:stretch!important;
+ width:100%;max-width:100%;overflow-x:auto!important;overflow-y:hidden!important;
+ padding:2px 2px 9px!important;scroll-snap-type:x mandatory;
+ -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:thin;
 }
-.ao-panes-compare .ao-pane-card{
-  flex:0 0 clamp(310px,46vw,470px);width:clamp(310px,46vw,470px);
-  height:470px;min-height:470px;max-height:470px;
-  display:flex;flex-direction:column;align-self:flex-start;
-  scroll-snap-align:start;overflow:hidden!important;
+.ao-panes-compare>.ao-pane-card{
+ box-sizing:border-box;flex:0 0 260px!important;width:260px!important;
+ height:310px!important;min-height:310px!important;max-height:310px!important;
+ min-width:0;display:flex!important;flex-direction:column!important;
+ align-self:stretch!important;overflow:hidden!important;scroll-snap-align:start;
+ padding:12px!important;
 }
-.ao-panes-compare .ao-pane-card .ao-ph{flex:0 0 auto}
-.ao-panes-compare .ao-pane-card .ao-pb{
-  flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto;
-  overscroll-behavior:contain;padding-inline-end:5px;
-  scrollbar-width:thin;
+.ao-panes-compare>.ao-pane-card .ao-ph{flex:0 0 auto;min-height:26px}
+.ao-panes-compare>.ao-pane-card .ao-pb{
+ flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+ overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;
+ padding:2px 4px 8px 0;overflow-wrap:anywhere;
 }
-.ao-panes-compare .ao-pane-card .ao-src{flex:0 0 auto;max-height:54px;overflow:auto}
+.ao-panes-compare>.ao-pane-card .ao-src{flex:0 0 auto;max-height:36px;overflow:auto}
 @media(max-width:767px){
-  .ao-panes-compare{gap:10px!important}
-  .ao-panes-compare .ao-pane-card{
-    flex-basis:84vw;width:84vw;height:430px;min-height:430px;max-height:430px;
-    padding:13px!important
-  }
+ .ao-panes-compare>.ao-pane-card{
+  flex-basis:68vw!important;width:68vw!important;
+  height:270px!important;min-height:270px!important;max-height:270px!important;
+  padding:10px!important;
+ }
 }
 @media(max-width:360px){
-  .ao-panes-compare .ao-pane-card{flex-basis:88vw;width:88vw;height:410px;min-height:410px;max-height:410px}
+ .ao-panes-compare>.ao-pane-card{
+  flex-basis:72vw!important;width:72vw!important;
+  height:250px!important;min-height:250px!important;max-height:250px!important;
+ }
 }
-/* Focus must never recolor borders, outlines, shadows or rings. */
-.ao-composer,.ao-composer:focus-within{
-  border-color: hsl(var(--border-faint))!important;
-  box-shadow:none!important;outline:none!important;
-}
-.ao-composer textarea,.ao-composer textarea:focus,
-.ao-sel,.ao-sel:focus,.ao-send,.ao-send:focus,
-.ao-seg button,.ao-seg button:focus,
-.ao-iconbtn,.ao-iconbtn:focus,.ao-navbtn,.ao-navbtn:focus,
-.ao-chip,.ao-chip:focus,.ao-pill,.ao-pill:focus,
-.ao-vbtn,.ao-vbtn:focus{
-  outline:none!important;box-shadow:none!important;
-}
-.ao-sel:focus,.ao-send:focus,.ao-seg button:focus,
-.ao-iconbtn:focus,.ao-navbtn:focus,.ao-chip:focus,
-.ao-pill:focus,.ao-vbtn:focus{border-color:inherit!important}
-.ao-thinking-indicator{gap:9px}
+/* Direct mode is a full-width answer, never constrained by comparison-card sizing. */
+.ao-round-direct,.ao-round-direct .ao-panes,.ao-round-direct .ao-pane,
+.ao-round-direct .ao-pb{width:100%!important;max-width:none!important;min-width:0!important}
+.ao-round-direct .ao-panes{display:block!important;overflow:visible!important}
+.ao-round-direct .ao-pane{display:block!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.ao-round-direct .ao-pb{overflow:visible!important;height:auto!important;max-height:none!important}
+/* Google's official four-colour G mark. */
+.ao-provider-logo{width:21px;height:21px;flex:0 0 21px}
+.ao-provider-logo svg{display:block;width:100%;height:100%}
+/* Format the complete Markdown tree first, then reveal formatted blocks softly. */
+.ao-md-staging{display:contents}
+.ao-md-enter{animation:pixMarkdownEnter .24s ease both;animation-delay:var(--md-enter-delay,0ms)}
+@keyframes pixMarkdownEnter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+/* Single quiet thinking indicator: remove inherited pseudo-element animations. */
+.ao-pb.ao-thinking{display:block!important;min-height:24px!important}
+.ao-pb.ao-thinking::before,.ao-pb.ao-thinking::after{content:none!important;display:none!important;animation:none!important}
+.ao-thinking-indicator{display:inline-flex!important;align-items:center!important;gap:8px!important;margin:0!important}
 .ao-thinking-shape{
-  width:13px;height:13px;border:2px solid currentColor;border-radius:50%;
-  animation:pixShapeMorph 1.65s cubic-bezier(.6,0,.4,1) infinite;
+ width:14px!important;height:14px!important;flex:0 0 14px!important;
+ border:2px solid currentColor!important;border-right-color:transparent!important;
+ border-radius:50%!important;background:transparent!important;
+ animation:pixArenaSpin .8s linear infinite!important;
 }
-.ao-thinking-text{animation:none!important;opacity:.8}
-@keyframes pixShapeMorph{
-  0%,100%{border-radius:50%;transform:rotate(0deg) scale(.94)}
-  50%{border-radius:4px;transform:rotate(180deg) scale(1.06)}
-}
-@media(prefers-reduced-motion:reduce){.ao-thinking-shape{animation:none!important}}
-
-
-/* Comparison layout refinement: balanced desktop columns, swipeable compact cards on phones. */
-.ao-panes-compare{
-  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  align-items:stretch!important;gap:14px!important;overflow:visible!important;
-  padding:0!important;scroll-snap-type:none!important;
-}
-.ao-panes-compare .ao-pane-card{
-  width:auto!important;min-width:0;max-width:100%;height:min(68svh,620px)!important;
-  min-height:360px!important;max-height:620px!important;align-self:stretch!important;
-  display:flex;flex-direction:column;overflow:hidden!important;
-}
-.ao-panes-compare .ao-pane-card .ao-ph{flex:none;min-height:30px}
-.ao-panes-compare .ao-pane-card .ao-pb{
-  flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto!important;
-  overscroll-behavior:contain;padding:2px 5px 10px 0;scrollbar-width:thin;
-}
-.ao-panes-compare .ao-pane-card .ao-pb.ao-thinking{
-  display:block!important;min-height:0!important;flex:1 1 auto;
-  padding-top:4px;align-items:initial!important;
-}
-.ao-panes-compare .ao-pane-card .ao-src{flex:none;max-height:48px;overflow:auto}
-.ao-panes-compare .ao-pane-card .ao-thinking-indicator{margin-top:3px}
-.ao-pb .md-image{display:block;max-width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:10px;margin:.6em 0}
-.ao-pb .md-paragraph{white-space:pre-wrap;overflow-wrap:anywhere}
-.ao-pb .md-code{max-width:100%;overflow:auto}
-@media(max-width:767px){
-  .ao-panes-compare{
-    display:flex!important;align-items:stretch!important;gap:12px!important;
-    overflow-x:auto!important;overflow-y:hidden!important;
-    padding:2px 2px 12px!important;scroll-snap-type:x mandatory!important;
-    overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
-    scrollbar-width:thin;
-  }
-  .ao-panes-compare .ao-pane-card{
-    flex:0 0 88%!important;width:88%!important;height:min(62svh,560px)!important;
-    min-height:340px!important;max-height:560px!important;
-    scroll-snap-align:center;align-self:stretch!important;
-  }
-}
-@media(max-width:380px){
-  .ao-panes-compare .ao-pane-card{flex-basis:91%!important;width:91%!important}
-}
-/* Keep focus state visually identical to rest state across all interactive controls. */
-.ao-composer,.ao-composer:focus,.ao-composer:focus-within,
-.ao-composer textarea,.ao-composer textarea:focus,.ao-composer textarea:focus-visible,
-.ao-sel,.ao-sel:focus,.ao-sel:focus-visible,
-.ao-send,.ao-send:focus,.ao-send:focus-visible,
-.ao-seg button,.ao-seg button:focus,.ao-seg button:focus-visible,
-.ao-iconbtn,.ao-iconbtn:focus,.ao-iconbtn:focus-visible,
-.ao-navbtn,.ao-navbtn:focus,.ao-navbtn:focus-visible,
-.ao-chip,.ao-chip:focus,.ao-chip:focus-visible,
-.ao-pill,.ao-pill:focus,.ao-pill:focus-visible,
-.ao-vbtn,.ao-vbtn:focus,.ao-vbtn:focus-visible{
-  outline:none!important;box-shadow:none!important;
-}
-.ao-composer:focus-within{border-color:hsl(var(--border-faint))!important}
-.ao-sel:focus,.ao-sel:focus-visible{border-color:hsl(var(--border-medium))!important}
-
-
-/* Direct mode: render the answer as a full-width conversation, not as a comparison card. */
-.ao-conv:has(.ao-round-direct){max-width:none;width:100%}
-.ao-round-direct{width:100%;max-width:none;min-width:0}
-.ao-round-direct .ao-panes{display:block!important;width:100%;max-width:none;min-width:0}
-.ao-round-direct .ao-pane:not(.ao-pane-card){display:block;width:100%;max-width:none;min-width:0;padding:0!important}
-.ao-round-direct .ao-pb{display:block;width:100%;max-width:none;min-width:0;overflow-wrap:anywhere;white-space:normal}
-@media(max-width:767px){
- .ao-conv:has(.ao-round-direct){padding-inline:14px}
- .ao-round-direct .ao-pb{font-size:16px;line-height:1.8}
-}
-
-
-/* Compact, equal-sized comparison cards on small screens. */
-@media(max-width:767px){
-  .ao-panes-compare{gap:10px!important}
-  .ao-panes-compare .ao-pane-card{
-    flex:0 0 78%!important;
-    width:78%!important;
-    height: min(48svh, 420px)!important;
-    min-height:260px!important;
-    max-height:420px!important;
-  }
-}
-@media(max-width:380px){
-  .ao-panes-compare .ao-pane-card{flex-basis:82%!important;width:82%!important}
-}
-
-/* One restrained thinking animation: a rotating shape morphing between a circle and a soft square. */
-.ao-pb.ao-thinking{
-  display:flex!important;
-  align-items:center!important;
-  gap:10px!important;
-  min-height:30px!important;
-}
-.ao-pb.ao-thinking::before,
-.ao-pb.ao-thinking::after,
-.ao-pb.ao-thinking.live::after{content:none!important;display:none!important;animation:none!important;box-shadow:none!important}
-.ao-thinking-indicator{
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:9px!important;
-  margin:0!important;
-}
-.ao-thinking-shape{
-  display:block!important;
-  flex:0 0 15px!important;
-  width:15px!important;
-  height:15px!important;
-  border:2px solid currentColor!important;
-  border-radius:50%!important;
-  background:transparent!important;
-  transform:rotate(0deg) scale(.92);
-  animation:pixThinkingMorph 1.55s cubic-bezier(.65,0,.35,1) infinite!important;
-}
-.ao-thinking-text{
-  display:inline-block!important;
-  animation:pixThinkingText 1.55s ease-in-out infinite!important;
-  letter-spacing:.01em;
-}
-@keyframes pixThinkingMorph{
-  0%,100%{border-radius:50%;transform:rotate(0deg) scale(.92)}
-  50%{border-radius:4px;transform:rotate(180deg) scale(1)}
-}
-@keyframes pixThinkingText{
-  0%,100%{opacity:.48}
-  50%{opacity:1}
-}
-@media(prefers-reduced-motion:reduce){
-  .ao-thinking-shape,.ao-thinking-text{animation:none!important}
-}
+.ao-thinking-text{font-size:13px;opacity:.76;letter-spacing:.01em;animation:none!important}
+@keyframes pixArenaSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.ao-thinking-shape,.ao-md-enter{animation:none!important}}
