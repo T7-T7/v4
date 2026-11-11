@@ -188,3 +188,19 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 @keyframes pixShapeMorph{0%,100%{border-radius:50%;transform:rotate(0) scale(.92)}50%{border-radius:4px;transform:rotate(180deg) scale(1.08)}}
 @keyframes pixThinkingText{0%,100%{opacity:.48;transform:translateX(0)}50%{opacity:1;transform:translateX(2px)}}
 @media(prefers-reduced-motion:reduce){.ao-thinking-shape,.ao-thinking-text{animation:none}}
+/* Complete readable Markdown presentation */
+.ao-pb.live::after{display:none!important}
+.ao-pb.ao-streaming{border:0!important;padding-inline-start:0!important}
+.ao-pb .md-heading{font-weight:700;line-height:1.45;margin:1.1em 0 .55em}
+.ao-pb h1.md-heading{font-size:1.45em}.ao-pb h2.md-heading{font-size:1.3em}.ao-pb h3.md-heading{font-size:1.16em}.ao-pb h4.md-heading,.ao-pb h5.md-heading,.ao-pb h6.md-heading{font-size:1.05em}
+.ao-pb .md-paragraph{margin:.55em 0;line-height:1.8;white-space:pre-wrap}
+.ao-pb .md-list{padding-inline-start:1.6em;margin:.65em 0}.ao-pb .md-list li{padding-inline-start:.15em;margin:.3em 0;line-height:1.75}
+.ao-pb .md-task{margin-inline-end:.45em;accent-color:currentColor;vertical-align:middle}
+.ao-pb .md-quote{border-inline-start:3px solid hsl(var(--border-strong));padding-inline-start:12px;margin:.8em 0;opacity:.9}
+.ao-pb .md-quote .md-paragraph{margin:.3em 0}
+.ao-pb .md-inline-code{font-family:ui-monospace,SFMono-Regular,monospace;font-size:.9em;padding:2px 5px;border-radius:5px;background:hsl(var(--surface-tertiary));direction:ltr;unicode-bidi:isolate}
+.ao-pb .md-code{overflow:auto;padding:13px;border-radius:9px;background:hsl(var(--surface-secondary));direction:ltr;text-align:left;white-space:pre;max-width:100%}.ao-pb .md-code code{font-family:ui-monospace,SFMono-Regular,monospace;font-size:.9em;line-height:1.6}
+.ao-pb .md-table-wrap{max-width:100%;overflow-x:auto;margin:.8em 0}.ao-pb .md-table{border-collapse:collapse;width:100%;font-size:.94em}.ao-pb .md-table th,.ao-pb .md-table td{border:1px solid hsl(var(--border-faint));padding:8px 10px}.ao-pb .md-table th{font-weight:700;background:hsl(var(--surface-secondary))}
+.ao-pb .md-hr{border:0;border-top:1px solid hsl(var(--border-faint));margin:1em 0}.ao-pb .md-link{text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.ao-pb .ao-thinking-indicator{gap:9px}.ao-pb .ao-thinking-shape{width:12px;height:12px;border-width:1.7px;animation:pixShapeMorph 1.7s ease-in-out infinite}.ao-pb .ao-thinking-text{animation:pixThinkingText 2.2s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.ao-pb .ao-thinking-shape,.ao-pb .ao-thinking-text{animation:none}}
