@@ -1,0 +1,15 @@
+{
+  "name": "pix-ai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pix AI frontend connected to the original Gemini web scraper engine.",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node server.js"
+  },
+  "dependencies": {}
+}
