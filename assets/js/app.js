@@ -64,10 +64,10 @@
 
   /* ---------- Gemini engine ---------- */
   function instructionFor(model) {
-    if (model === 'Gemini Deep') {
-      return 'أنت مساعد Pix الذكي. حلّل السؤال بعمق، تحقّق من التفاصيل، اشرح الأسباب والخطوات، ولا تختلق معلومات أو مصادر. أجب بلغة المستخدم.';
+    var persona=''; try { var p=JSON.parse(localStorage.getItem('pix-ai-local-tools-v1')||'{}').persona; persona=({coder:'تصرف كمبرمج خبير وراجع الحلول بعناية.',analyst:'تصرف كمحلل دقيق وافصل الحقائق عن الافتراضات.',teacher:'تصرف كمدرس واشرح بالتدرج مع أمثلة واضحة.',writer:'تصرف ككاتب محترف واهتم بالصياغة والتنظيم.'})[p]||''; } catch(e) {}\n    if (model === 'Gemini Deep') {
+      return 'أنت مساعد Pix الذكي. حلّل السؤال بعمق، تحقّق من التفاصيل، اشرح الأسباب والخطوات، ولا تختلق معلومات أو مصادر. أجب بلغة المستخدم. '+persona;
     }
-    return 'أنت مساعد Pix الذكي. أجب مباشرة وبدقة، وابحث في الويب عند الحاجة عبر قدرات Gemini المتاحة. لا تختلق معلومات أو مصادر. أجب بلغة المستخدم.';
+    return 'أنت مساعد Pix الذكي. أجب مباشرة وبدقة، وابحث في الويب عند الحاجة عبر قدرات Gemini المتاحة. لا تختلق معلومات أو مصادر. أجب بلغة المستخدم. '+persona;
   }
   function renderMarkdown(target, source) {
     target.replaceChildren();
@@ -215,7 +215,7 @@
     var box = $('hist'); box.innerHTML = '';
     if (!state.chats.length) { box.appendChild(el('div', 'ao-empty', tr('none'))); return; }
     state.chats.forEach(function (c) {
-      var row = el('div', 'ao-hitem' + (c.id === state.cur ? ' on' : ''));
+      var row = el('div', 'ao-hitem' + (c.id === state.cur ? ' on' : '')); row.dataset.chatId = c.id;
       var t = el('button', 't', c.title); t.type = 'button'; t.onclick = function () { openChat(c.id); closeSide(); };
       var x = el('button', 'x'); x.type = 'button'; x.setAttribute('aria-label', tr('del')); x.innerHTML = ICON.x;
       x.onclick = function (e) { e.stopPropagation(); state.chats = state.chats.filter(function (k) { return k.id !== c.id; }); if (state.cur === c.id) newChat(); save(); renderHistory(); };
@@ -498,7 +498,7 @@
       $('side').querySelector('.ao-side-foot').appendChild(wrap);applyLocalPrefs();
     }
     function pinControls(){
-      $('hist').querySelectorAll('.ao-hitem').forEach(function(row){var title=row.querySelector('.t');if(!title)return;var chat=state.chats.find(function(c){return c.title===title.textContent;});if(!chat)return;row.dataset.chatId=chat.id;
+      $('hist').querySelectorAll('.ao-hitem').forEach(function(row){var title=row.querySelector('.t');if(!title)return;var chat=state.chats.find(function(c){return c.id===row.dataset.chatId;});if(!chat)return;
         if(row.querySelector('.ao-pin'))return;
         var p=btn(prefs.pinned.includes(chat.id)?'★':'☆',function(){var at=prefs.pinned.indexOf(chat.id);if(at<0)prefs.pinned.push(chat.id);else prefs.pinned.splice(at,1);persist();renderHistory();},'ao-pin');row.insertBefore(p,title);
         var f=btn('▾',function(){var name=prompt(label('اكتب اسم مجلد موجود أو اتركه فارغًا لإزالة التصنيف','Enter an existing folder name, or leave blank to clear'));if(name===null)return;name=name.trim();if(name&&!prefs.folders.includes(name)){toast(label('أنشئ المجلد أولًا','Create the folder first'));return;}if(name)prefs.folderByChat[chat.id]=name;else delete prefs.folderByChat[chat.id];persist();toast(label('تم تحديث المجلد','Folder updated'));},'ao-pin');row.insertBefore(f,title);
