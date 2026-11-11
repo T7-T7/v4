@@ -420,7 +420,7 @@
           var target=getChat(chat.id);if(!target)return;
           target.rounds=target.rounds.slice(0,roundIndex);
           state.cur=chat.id;save();sessionStorage.setItem('pix-ai-resume-chat',chat.id);
-          sessionStorage.setItem('pix-ai-draft',round.prompt);location.reload();
+          sessionStorage.setItem('pix-ai-draft',round.prompt);sessionStorage.setItem('pix-ai-auto-send','1');location.reload();
         }));
         group.appendChild(btn(label('تعديل السؤال','Edit question'),function(){
           if(state.busy)return;
@@ -508,8 +508,8 @@
     var observer=new MutationObserver(function(){addRoundTools();pinControls();});
     observer.observe($('conv'),{childList:true,subtree:true});observer.observe($('hist'),{childList:true});
     addSidebarTools();addSettings();addRoundTools();pinControls();
-    var resume=sessionStorage.getItem('pix-ai-resume-chat'),draft=sessionStorage.getItem('pix-ai-draft');
-    if(resume){sessionStorage.removeItem('pix-ai-resume-chat');sessionStorage.removeItem('pix-ai-draft');setTimeout(function(){var c=getChat(resume);if(c){var row=Array.prototype.find.call($('hist').querySelectorAll('.ao-hitem'),function(x){return x.dataset.chatId===resume;});if(row&&row.querySelector('.t'))row.querySelector('.t').click();$('prompt').value=draft||'';autosize();sync();$('prompt').focus();}},100);}
+    var resume=sessionStorage.getItem('pix-ai-resume-chat'),draft=sessionStorage.getItem('pix-ai-draft'),autoSend=sessionStorage.getItem('pix-ai-auto-send')==='1';
+    if(resume){sessionStorage.removeItem('pix-ai-resume-chat');sessionStorage.removeItem('pix-ai-draft');sessionStorage.removeItem('pix-ai-auto-send');setTimeout(function(){var c=getChat(resume);if(c){var row=Array.prototype.find.call($('hist').querySelectorAll('.ao-hitem'),function(x){return x.dataset.chatId===resume;});if(row&&row.querySelector('.t'))row.querySelector('.t').click();$('prompt').value=draft||'';autosize();sync();if(autoSend)send();else $('prompt').focus();}},150);}
     window.addEventListener('storage',function(e){if(e.key===STORE)location.reload();});
   }
 
