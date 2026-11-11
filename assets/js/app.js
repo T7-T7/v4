@@ -225,6 +225,7 @@
       var txt = node.textContent || '';
       if (!txt.trim()) txt = state.lang === 'ar' ? 'تم إيقاف الطلب.' : 'Request stopped.';
       if (r && r.answers[idx]) { r.answers[idx].text = txt; r.answers[idx].ms = 0; }
+      var copyButtons = document.querySelectorAll('.ao-copy'); if (copyButtons[idx]) copyButtons[idx].disabled = false;
     }
     var rounds = document.querySelectorAll('.ao-round');
     var last = rounds[rounds.length - 1];
