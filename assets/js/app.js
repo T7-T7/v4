@@ -503,7 +503,7 @@
         var p=btn(prefs.pinned.includes(chat.id)?'★':'☆',function(){var at=prefs.pinned.indexOf(chat.id);if(at<0)prefs.pinned.push(chat.id);else prefs.pinned.splice(at,1);persist();renderHistory();},'ao-pin');row.insertBefore(p,title);
         var f=btn('▾',function(){var name=prompt(label('اكتب اسم مجلد موجود أو اتركه فارغًا لإزالة التصنيف','Enter an existing folder name, or leave blank to clear'));if(name===null)return;name=name.trim();if(name&&!prefs.folders.includes(name)){toast(label('أنشئ المجلد أولًا','Create the folder first'));return;}if(name)prefs.folderByChat[chat.id]=name;else delete prefs.folderByChat[chat.id];persist();toast(label('تم تحديث المجلد','Folder updated'));},'ao-pin');row.insertBefore(f,title);
       });
-      var rows=Array.prototype.slice.call($('hist').children);rows.sort(function(a,b){return Number(prefs.pinned.includes(b.dataset.chatId))-Number(prefs.pinned.includes(a.dataset.chatId));});rows.forEach(function(x){$('hist').appendChild(x);});
+      var rows=Array.prototype.slice.call($('hist').children),sorted=rows.slice().sort(function(a,b){return Number(prefs.pinned.includes(b.dataset.chatId))-Number(prefs.pinned.includes(a.dataset.chatId));});if(rows.some(function(x,i){return x!==sorted[i];}))sorted.forEach(function(x){$('hist').appendChild(x);});
     }
     var observer=new MutationObserver(function(){addRoundTools();pinControls();});
     observer.observe($('conv'),{childList:true,subtree:true});observer.observe($('hist'),{childList:true});
