@@ -204,3 +204,6 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 .ao-pb .md-hr{border:0;border-top:1px solid hsl(var(--border-faint));margin:1em 0}.ao-pb .md-link{text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .ao-pb .ao-thinking-indicator{gap:9px}.ao-pb .ao-thinking-shape{width:12px;height:12px;border-width:1.7px;animation:pixShapeMorph 1.7s ease-in-out infinite}.ao-pb .ao-thinking-text{animation:pixThinkingText 2.2s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.ao-pb .ao-thinking-shape,.ao-pb .ao-thinking-text{animation:none}}
+
+/* Keep exactly one thinking animation: the morphing shape beside its label. */
+.ao-pb.ao-thinking::before,.ao-pb.ao-thinking::after{display:none!important;content:none!important}
