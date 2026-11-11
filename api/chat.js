@@ -50,18 +50,13 @@ export default async function handler(req, res) {
   const sessionId = typeof body.sessionId === "string" ? body.sessionId.slice(0, 12000) : undefined;
 
   try {
-    const result = await gemini.chat({ prompt, instruction, sessionId });
-    return res.status(200).json({
-      success: true,
-      provider: "gemini-scraper",
-      response: result.response,
-      sessionId: result.sessionId || null,
-      conversationId: result.conversationId || null,
-      responseId: result.responseId || null,
-      method: result.method || null
-    });
-  } catch (error) {
-    console.error("[Pix Gemini]", error?.message || error);
-    return res.status(502).json({ success: false, error: String(error?.message || "تعذر الاتصال بمحرك Gemini.").slice(0, 900) });
+    res.statusCode=200;res.setHeader('Content-Type','text/event-stream; charset=utf-8');res.setHeader('Cache-Control','no-cache, no-transform');res.setHeader('Connection','keep-alive');res.setHeader('X-Accel-Buffering','no');res.flushHeaders?.();
+    const emit=(event)=>{if(!res.destroyed&&!res.writableEnded){res.write('data: '+JSON.stringify(event)+'\n\n');res.flush?.();}};
+    const result=await gemini.chatStream({prompt,instruction,sessionId},chunk=>emit({type:'chunk',text:chunk}));
+    emit({type:'done',sessionId:result.sessionId||null,conversationId:result.conversationId||null,responseId:result.responseId||null,method:result.method||null});return res.end();
+  } catch(error) {
+    console.error('[Pix Gemini]',error?.message||error);
+    if(!res.headersSent)return res.status(502).json({success:false,error:String(error?.message||'تعذر الاتصال بمحرك Gemini.').slice(0,900)});
+    emit({type:'error',error:String(error?.message||'تعذر الاتصال بمحرك Gemini.').slice(0,900)});return res.end();
   }
 }
