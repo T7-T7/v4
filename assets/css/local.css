@@ -264,3 +264,62 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
   50%{border-radius:4px;transform:rotate(180deg) scale(1.06)}
 }
 @media(prefers-reduced-motion:reduce){.ao-thinking-shape{animation:none!important}}
+
+
+/* Comparison layout refinement: balanced desktop columns, swipeable compact cards on phones. */
+.ao-panes-compare{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:14px!important;overflow:visible!important;
+  padding:0!important;scroll-snap-type:none!important;
+}
+.ao-panes-compare .ao-pane-card{
+  width:auto!important;min-width:0;max-width:100%;height:min(68svh,620px)!important;
+  min-height:360px!important;max-height:620px!important;align-self:stretch!important;
+  display:flex;flex-direction:column;overflow:hidden!important;
+}
+.ao-panes-compare .ao-pane-card .ao-ph{flex:none;min-height:30px}
+.ao-panes-compare .ao-pane-card .ao-pb{
+  flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto!important;
+  overscroll-behavior:contain;padding:2px 5px 10px 0;scrollbar-width:thin;
+}
+.ao-panes-compare .ao-pane-card .ao-pb.ao-thinking{
+  display:block!important;min-height:0!important;flex:1 1 auto;
+  padding-top:4px;align-items:initial!important;
+}
+.ao-panes-compare .ao-pane-card .ao-src{flex:none;max-height:48px;overflow:auto}
+.ao-panes-compare .ao-pane-card .ao-thinking-indicator{margin-top:3px}
+.ao-pb .md-image{display:block;max-width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:10px;margin:.6em 0}
+.ao-pb .md-paragraph{white-space:pre-wrap;overflow-wrap:anywhere}
+.ao-pb .md-code{max-width:100%;overflow:auto}
+@media(max-width:767px){
+  .ao-panes-compare{
+    display:flex!important;align-items:stretch!important;gap:12px!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    padding:2px 2px 12px!important;scroll-snap-type:x mandatory!important;
+    overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .ao-panes-compare .ao-pane-card{
+    flex:0 0 88%!important;width:88%!important;height:min(62svh,560px)!important;
+    min-height:340px!important;max-height:560px!important;
+    scroll-snap-align:center;align-self:stretch!important;
+  }
+}
+@media(max-width:380px){
+  .ao-panes-compare .ao-pane-card{flex-basis:91%!important;width:91%!important}
+}
+/* Keep focus state visually identical to rest state across all interactive controls. */
+.ao-composer,.ao-composer:focus,.ao-composer:focus-within,
+.ao-composer textarea,.ao-composer textarea:focus,.ao-composer textarea:focus-visible,
+.ao-sel,.ao-sel:focus,.ao-sel:focus-visible,
+.ao-send,.ao-send:focus,.ao-send:focus-visible,
+.ao-seg button,.ao-seg button:focus,.ao-seg button:focus-visible,
+.ao-iconbtn,.ao-iconbtn:focus,.ao-iconbtn:focus-visible,
+.ao-navbtn,.ao-navbtn:focus,.ao-navbtn:focus-visible,
+.ao-chip,.ao-chip:focus,.ao-chip:focus-visible,
+.ao-pill,.ao-pill:focus,.ao-pill:focus-visible,
+.ao-vbtn,.ao-vbtn:focus,.ao-vbtn:focus-visible{
+  outline:none!important;box-shadow:none!important;
+}
+.ao-composer:focus-within{border-color:hsl(var(--border-faint))!important}
+.ao-sel:focus,.ao-sel:focus-visible{border-color:hsl(var(--border-medium))!important}
