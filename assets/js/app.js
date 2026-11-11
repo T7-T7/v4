@@ -234,7 +234,7 @@
     return r.models.slice();
   }
   function renderRound(r, live) {
-    var wrap = el('section', 'ao-round');
+    var wrap = el('section', 'ao-round' + (r.mode === 'direct' ? ' ao-round-direct' : ''));
     wrap.style.cssText = 'display:flex;flex-direction:column;gap:14px';
     var q = el('div', 'ao-q', r.prompt); q.setAttribute('dir', 'auto'); wrap.appendChild(q);
     var panes = el('div', 'ao-panes' + (r.mode === 'direct' ? '' : ' ao-panes-compare')); panes.style.setProperty('--cols', r.mode === 'direct' ? 1 : 2);
