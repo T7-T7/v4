@@ -253,3 +253,37 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
 .ao-thinking-text{font-size:13px;opacity:.76;letter-spacing:.01em;animation:none!important}
 @keyframes pixArenaSpin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.ao-thinking-shape,.ao-md-enter{animation:none!important}}
+
+
+/* Final polish: compact Google mark and keep focus styling colour-neutral. */
+.ao-provider-logo{
+  width:16px!important;
+  height:16px!important;
+  flex:0 0 16px!important;
+}
+.ao-provider-logo svg{
+  display:block!important;
+  width:16px!important;
+  height:16px!important;
+}
+.ao-composer:focus-within{
+  border-color:hsl(var(--border-faint))!important;
+  box-shadow:0 1px 2px hsl(var(--text-primary)/.05)!important;
+}
+button:focus,
+button:focus-visible,
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible{
+  outline:none!important;
+  box-shadow:none!important;
+}
+.ao-sel:focus,
+.ao-sel:focus-visible{
+  border-color:hsl(var(--border-medium))!important;
+}
