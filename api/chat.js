@@ -57,6 +57,6 @@ export default async function handler(req, res) {
   } catch(error) {
     console.error('[Pix Gemini]',error?.message||error);
     if(!res.headersSent)return res.status(502).json({success:false,error:String(error?.message||'تعذر الاتصال بمحرك Gemini.').slice(0,900)});
-    emit({type:'error',error:String(error?.message||'تعذر الاتصال بمحرك Gemini.').slice(0,900)});return res.end();
+    res.write('data: '+JSON.stringify({type:'error',error:String(error?.message||'تعذر الاتصال بمحرك Gemini.').slice(0,900)})+'\\n\\n');return res.end();
   }
 }
