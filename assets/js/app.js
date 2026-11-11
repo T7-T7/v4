@@ -64,7 +64,8 @@
 
   /* ---------- Gemini engine ---------- */
   function instructionFor(model) {
-    var persona=''; try { var p=JSON.parse(localStorage.getItem('pix-ai-local-tools-v1')||'{}').persona; persona=({coder:'تصرف كمبرمج خبير وراجع الحلول بعناية.',analyst:'تصرف كمحلل دقيق وافصل الحقائق عن الافتراضات.',teacher:'تصرف كمدرس واشرح بالتدرج مع أمثلة واضحة.',writer:'تصرف ككاتب محترف واهتم بالصياغة والتنظيم.'})[p]||''; } catch(e) {}\n    if (model === 'Gemini Deep') {
+    var persona=''; try { var p=JSON.parse(localStorage.getItem('pix-ai-local-tools-v1')||'{}').persona; persona=({coder:'تصرف كمبرمج خبير وراجع الحلول بعناية.',analyst:'تصرف كمحلل دقيق وافصل الحقائق عن الافتراضات.',teacher:'تصرف كمدرس واشرح بالتدرج مع أمثلة واضحة.',writer:'تصرف ككاتب محترف واهتم بالصياغة والتنظيم.'})[p]||''; } catch(e) {}
+    if (model === 'Gemini Deep') {
       return 'أنت مساعد Pix الذكي. حلّل السؤال بعمق، تحقّق من التفاصيل، اشرح الأسباب والخطوات، ولا تختلق معلومات أو مصادر. أجب بلغة المستخدم. '+persona;
     }
     return 'أنت مساعد Pix الذكي. أجب مباشرة وبدقة، وابحث في الويب عند الحاجة عبر قدرات Gemini المتاحة. لا تختلق معلومات أو مصادر. أجب بلغة المستخدم. '+persona;
