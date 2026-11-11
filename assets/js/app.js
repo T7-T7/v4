@@ -59,6 +59,17 @@
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function isAr(s) { return /[\u0600-\u06FF]/.test(s); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function copyAnswer(value, button) {
+    if (!value) return;
+    function done() { if (button) { button.classList.add('copied'); setTimeout(function(){ button.classList.remove('copied'); }, 1200); } toast(state.lang === 'ar' ? 'تم نسخ الإجابة' : 'Answer copied'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(value).then(done).catch(function(){ fallbackCopy(value, done); }); }
+    else fallbackCopy(value, done);
+  }
+  function fallbackCopy(value, done) {
+    var area = document.createElement('textarea'); area.value = value; area.style.position = 'fixed'; area.style.opacity = '0'; document.body.appendChild(area); area.select();
+    try { document.execCommand('copy'); done(); } catch (e) { toast(state.lang === 'ar' ? 'تعذر النسخ' : 'Copy failed'); }
+    area.remove();
+  }
   function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('show'); }, 2200); }
   function curChat() { for (var i = 0; i < state.chats.length; i++) if (state.chats[i].id === state.cur) return state.chats[i]; return null; }
 
@@ -83,6 +94,7 @@
     sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
     cols: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="16" rx="2"/></svg>',
     bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>',
     one: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="4" width="14" height="16" rx="2"/></svg>'
   };
   function icon(n) { var s = el('span'); s.innerHTML = ICON[n]; return s.firstChild; }
@@ -150,7 +162,12 @@
     r.answers.forEach(function (a, i) {
       var p = el('article', 'ao-pane');
       var h = el('div', 'ao-ph'); var n = el('div', 'ao-pn', names[i]); n.dataset.i = i; var m = el('div', 'ao-pm', live ? tr('searching') : (a.ms ? (a.ms / 1000).toFixed(1) + 's' : ''));
-      h.appendChild(n); h.appendChild(m); p.appendChild(h);
+      h.appendChild(n);
+      var tools = el('div', 'ao-pane-tools');
+      var copy = el('button', 'ao-copy', ''); copy.type = 'button'; copy.title = state.lang === 'ar' ? 'نسخ الإجابة' : 'Copy answer'; copy.setAttribute('aria-label', copy.title); copy.appendChild(icon('copy'));
+      copy.onclick = function () { copyAnswer(a.text, copy); };
+      if (live) copy.disabled = true;
+      tools.appendChild(m); tools.appendChild(copy); h.appendChild(tools); p.appendChild(h);
       var b = el('div', 'ao-pb' + (live ? ' live' : ''), live ? '' : a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
       var s = el('div', 'ao-src ao-hidden'); a.sources.forEach(function (x) { s.appendChild(el('span', null, x)); }); p.appendChild(s);
       if (!live) s.classList.remove('ao-hidden');
@@ -252,6 +269,7 @@
         if (data.sessionId) chat.sessions[model] = data.sessionId;
         view.bodies[index].textContent = answer.text;
         view.bodies[index].classList.remove('live');
+        var copyButton = view.wrap.querySelectorAll('.ao-copy')[index]; if (copyButton) copyButton.disabled = false;
         view.metas[index].m.textContent = (answer.ms / 1000).toFixed(1) + 's';
         view.metas[index].s.classList.remove('ao-hidden');
         answer.sources.forEach(function (source) { view.metas[index].s.appendChild(el('span', null, source)); });
@@ -262,6 +280,7 @@
         answer.ms = Date.now() - start;
         view.bodies[index].textContent = answer.text;
         view.bodies[index].classList.remove('live');
+        var copyButton = view.wrap.querySelectorAll('.ao-copy')[index]; if (copyButton) copyButton.disabled = false;
         view.metas[index].m.textContent = (answer.ms / 1000).toFixed(1) + 's';
         view.metas[index].s.classList.add('ao-hidden');
       }
