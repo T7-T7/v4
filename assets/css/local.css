@@ -287,3 +287,84 @@ select:focus-visible,
 .ao-sel:focus-visible{
   border-color:hsl(var(--border-medium))!important;
 }
+
+
+/* Composer controls refinement: balanced spacing and consistent modern icon sizing. */
+.ao-composer{
+  padding:14px!important;
+}
+.ao-composer textarea{
+  min-height:32px;
+  padding:3px 3px 1px;
+  line-height:1.65;
+}
+.ao-crow{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin-top:12px!important;
+  flex-wrap:nowrap!important;
+}
+.ao-models{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+.ao-sel{
+  height:36px!important;
+  min-width:0!important;
+  border-radius:10px!important;
+  padding-inline:11px 28px!important;
+  font-size:13px!important;
+  line-height:1!important;
+  appearance:none;
+  -webkit-appearance:none;
+  background-color:hsl(var(--surface-primary))!important;
+}
+html[dir=rtl] .ao-sel{padding-inline:11px 28px!important}
+.ao-send{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  border-radius:11px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 38px!important;
+}
+.ao-send svg{
+  width:19px!important;
+  height:19px!important;
+  stroke-width:1.9!important;
+  transform:none!important;
+}
+html[dir=rtl] .ao-send svg{transform:none!important}
+.ao-iconbtn svg,.ao-navbtn svg,.ao-pill svg{
+  stroke-width:1.8!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+@media(max-width:767px){
+  .ao-composer{padding:12px!important}
+  .ao-crow{gap:8px!important;margin-top:10px!important}
+  .ao-models{gap:6px!important}
+  .ao-sel{
+    width:clamp(92px,34vw,136px)!important;
+    max-width:calc((100vw - 104px)/2)!important;
+    height:35px!important;
+    padding-inline:9px 24px!important;
+    font-size:12px!important;
+  }
+  html[dir=rtl] .ao-sel{padding-inline:9px 24px!important}
+  .ao-send{width:37px!important;height:37px!important;min-width:37px!important;flex-basis:37px!important}
+}
+@media(max-width:360px){
+  .ao-models{gap:5px!important}
+  .ao-sel{max-width:calc((100vw - 92px)/2)!important;font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .ao-send{transition:none!important}
+}
