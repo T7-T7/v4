@@ -167,3 +167,16 @@ html[dir=rtl] .ao-send svg{transform:scaleX(-1)}
   outline:0!important;
   box-shadow:none!important;
 }
+/* True streamed output, thinking dots and Markdown */
+.ao-pb.ao-thinking{min-height:28px;display:flex;align-items:center;gap:5px}
+.ao-pb.ao-thinking:before,.ao-pb.ao-thinking:after{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.4;animation:pixThink 1s infinite ease-in-out}
+.ao-pb.ao-thinking:after{animation-delay:.18s;box-shadow:11px 0 0 currentColor}
+@keyframes pixThink{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-5px);opacity:1}}
+.ao-pb.ao-streaming{border-inline-start:2px solid var(--interactive-cta-focus);padding-inline-start:10px}
+.ao-pb .md-heading{font-size:1.12em;font-weight:700;margin:1em 0 .5em;line-height:1.45}
+.ao-pb .md-paragraph{margin:.5em 0;line-height:1.8;white-space:pre-wrap}
+.ao-pb .md-list{padding-inline-start:1.5em;margin:.6em 0}.ao-pb .md-list li{margin:.25em 0;line-height:1.75}
+.ao-pb .md-quote{border-inline-start:3px solid currentColor;padding-inline-start:12px;opacity:.85;margin:.8em 0}
+.ao-pb .md-inline-code{font-family:ui-monospace,monospace;font-size:.9em;padding:2px 5px;border-radius:5px;background:rgba(127,127,127,.14)}
+.ao-pb .md-code{overflow:auto;padding:12px;border-radius:8px;background:rgba(127,127,127,.12);direction:ltr;text-align:left}.ao-pb .md-code code{font-family:ui-monospace,monospace;white-space:pre}
+@media(prefers-reduced-motion:reduce){.ao-pb.ao-thinking:before,.ao-pb.ao-thinking:after{animation:none}}
