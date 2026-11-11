@@ -69,6 +69,23 @@
     }
     return 'أنت مساعد Pix الذكي. أجب مباشرة وبدقة، وابحث في الويب عند الحاجة عبر قدرات Gemini المتاحة. لا تختلق معلومات أو مصادر. أجب بلغة المستخدم.';
   }
+  function renderMarkdown(target, source) {
+    target.replaceChildren();
+    var lines=String(source||'').replace(/\r/g,'').split('\n'), i=0, list=null;
+    function inline(parent,s){
+      var re=/(\x60[^\x60]+\x60|\*\*[^*]+\*\*|\*[^*]+\*|_[^_]+_)/g, last=0,m;
+      while((m=re.exec(s))){if(m.index>last)parent.appendChild(document.createTextNode(s.slice(last,m.index)));
+        var t=m[0],n;if(t.charAt(0)==='\x60')n=el('code','md-inline-code',t.slice(1,-1));else if(t.slice(0,2)==='**')n=el('strong',null,t.slice(2,-2));else n=el('em',null,t.slice(1,-1));parent.appendChild(n);last=re.lastIndex;}
+      if(last<s.length)parent.appendChild(document.createTextNode(s.slice(last)));
+    }
+    while(i<lines.length){var s=lines[i].trim();if(!s){list=null;i++;continue;}
+      var h=s.match(/^(#{1,4})\s+(.+)$/);if(h){var hn=el('h'+h[1].length,'md-heading');inline(hn,h[2]);target.appendChild(hn);list=null;i++;continue;}
+      if(/^\x60\x60\x60/.test(s)){var code=[];i++;while(i<lines.length&&!/^\x60\x60\x60/.test(lines[i].trim()))code.push(lines[i++]);i++;var pre=el('pre','md-code'),co=el('code');co.textContent=code.join('\n');pre.appendChild(co);target.appendChild(pre);list=null;continue;}
+      var ordered=/^\d+\. /.test(s),bullet=/^[-*+] /.test(s);if(ordered||bullet){var tag=ordered?'ol':'ul';if(!list||list.tagName.toLowerCase()!==tag){list=el(tag,'md-list');target.appendChild(list);}var li=el('li');inline(li,s.replace(ordered?/^\d+\. /:/^[-*+] /,''));list.appendChild(li);i++;continue;}
+      var q=s.match(/^>\s?(.*)$/);if(q){var bq=el('blockquote','md-quote');inline(bq,q[1]);target.appendChild(bq);list=null;i++;continue;}
+      var p=el('p','md-paragraph');inline(p,s);target.appendChild(p);list=null;i++;
+    }
+  }
   function apiError(data, status) {
     return (data && (data.error || data.message)) || ('Gemini API HTTP ' + status);
   }
@@ -151,7 +168,7 @@
       var p = el('article', 'ao-pane');
       var h = el('div', 'ao-ph'); var n = el('div', 'ao-pn', names[i]); n.dataset.i = i; var m = el('div', 'ao-pm', live ? tr('searching') : (a.ms ? (a.ms / 1000).toFixed(1) + 's' : ''));
       h.appendChild(n); h.appendChild(m); p.appendChild(h);
-      var b = el('div', 'ao-pb' + (live ? ' live' : ''), live ? '' : a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
+      var b = el('div', 'ao-pb' + (live ? ' live ao-thinking' : '')); if (!live) renderMarkdown(b, a.text); b.setAttribute('dir', 'auto'); b.setAttribute('data-i', i); p.appendChild(b);
       var s = el('div', 'ao-src ao-hidden'); a.sources.forEach(function (x) { s.appendChild(el('span', null, x)); }); p.appendChild(s);
       if (!live) s.classList.remove('ao-hidden');
       panes.appendChild(p); bodies.push(b); metas.push({ m: m, s: s, n: n });
@@ -233,35 +250,29 @@
     await Promise.all(round.answers.map(async function (answer, index) {
       var model = models[index];
       try {
-        var response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            prompt: prompt,
-            instruction: instructionFor(model),
-            sessionId: chat.sessions[model] || null
-          }),
-          signal: state.controller.signal
-        });
-        var data = await response.json().catch(function () { return {}; });
-        if (!response.ok || !data.success || typeof data.response !== 'string') throw new Error(apiError(data, response.status));
-        if (requestId !== state.requestId) return;
-        answer.text = data.response.trim();
-        answer.sources = Array.isArray(data.sources) ? data.sources : [];
-        answer.ms = Date.now() - start;
-        if (data.sessionId) chat.sessions[model] = data.sessionId;
-        view.bodies[index].textContent = answer.text;
-        view.bodies[index].classList.remove('live');
-        view.metas[index].m.textContent = (answer.ms / 1000).toFixed(1) + 's';
-        view.metas[index].s.classList.remove('ao-hidden');
-        answer.sources.forEach(function (source) { view.metas[index].s.appendChild(el('span', null, source)); });
+        var response = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json','Accept':'text/event-stream'},
+          body:JSON.stringify({prompt:prompt,instruction:instructionFor(model),sessionId:chat.sessions[model]||null}),signal:state.controller.signal });
+        if(!response.ok){var errorData=await response.json().catch(function(){return {};});throw new Error(apiError(errorData,response.status));}
+        if(!response.body||!response.body.getReader)throw new Error('Streaming is not supported by this browser.');
+        var reader=response.body.getReader(),decoder=new TextDecoder(),pending='',doneEvent=null;answer.text='';
+        while(true){var part=await reader.read();if(part.done)break;pending+=decoder.decode(part.value,{stream:true});var chunks=pending.split('\n\n');pending=chunks.pop()||'';
+          chunks.forEach(function(chunk){var raw=chunk.split('\n').filter(function(x){return x.indexOf('data:')===0;}).map(function(x){return x.slice(5).trim();}).join('\n');if(!raw)return;var event=JSON.parse(raw);
+            if(event.type==='chunk'){answer.text+=event.text||'';if(requestId===state.requestId){view.bodies[index].classList.remove('ao-thinking');renderMarkdown(view.bodies[index],answer.text);view.bodies[index].classList.add('ao-streaming');scrollDown();}}
+            else if(event.type==='done')doneEvent=event;else if(event.type==='error')throw new Error(event.error||'Streaming failed');
+          });
+        }
+        if(!answer.text.trim()&&doneEvent&&doneEvent.response)answer.text=doneEvent.response;
+        if(!answer.text.trim())throw new Error('Gemini returned an empty response.');
+        answer.text=answer.text.trim();answer.ms=Date.now()-start;if(doneEvent&&doneEvent.sessionId)chat.sessions[model]=doneEvent.sessionId;
+        renderMarkdown(view.bodies[index],answer.text);view.bodies[index].classList.remove('live','ao-thinking','ao-streaming');
+        view.metas[index].m.textContent=(answer.ms/1000).toFixed(1)+'s';view.metas[index].s.classList.remove('ao-hidden');
       } catch (error) {
         if (requestId !== state.requestId) return;
         if (error && error.name === 'AbortError') return;
         answer.text = (state.lang === 'ar' ? 'تعذر الحصول على رد من Gemini: ' : 'Gemini request failed: ') + String(error && error.message || error);
         answer.ms = Date.now() - start;
-        view.bodies[index].textContent = answer.text;
-        view.bodies[index].classList.remove('live');
+        renderMarkdown(view.bodies[index], answer.text);
+        view.bodies[index].classList.remove('live','ao-thinking','ao-streaming');
         view.metas[index].m.textContent = (answer.ms / 1000).toFixed(1) + 's';
         view.metas[index].s.classList.add('ao-hidden');
       }
